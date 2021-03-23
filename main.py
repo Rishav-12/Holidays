@@ -39,3 +39,5 @@ else:
 		print("\n")
 		print(holiday['name'])
 		print(holiday['description'])
+
+input()
