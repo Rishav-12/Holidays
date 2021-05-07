@@ -10,3 +10,4 @@ A fun Python script that uses an api to get you the holidays of any place you wa
 * Generate an api key from calendarific.com
 * Create a file *api_key.txt*, put your api key in and keep it beside the python script
 * Run the script from your console
+* I also used Task Scheduler on Windows to run this script everyday
