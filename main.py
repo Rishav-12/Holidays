@@ -3,6 +3,11 @@ This script uses the https://calendarific.com/ api
 '''
 import requests
 from datetime import date
+import smtplib
+
+SENDER = "" # make sure less secure app access is turned on
+RECEIVER = ""
+PASSWORD = "" # sender's gmail password
 
 with open('api_key.txt', 'r') as key: # <-- use your own api key here
 	api_key = key.read().strip()
@@ -25,19 +30,24 @@ try:
 except Exception:
 	holidays = None
 
+response = ""
+
 if holidays is None:
-	print("Could not fetch data. Terminating")
+	response += "Could not fetch data. Terminating"
 
 elif len(holidays) == 0:
-	print("No holidays today...")
+	response += "No holidays today..."
 
 else:
-	print("\nToday's holidays :")
-	print("*************************")
+	response += "\nToday's holidays :\n"
+	response += "*************************\n"
 
 	for holiday in holidays:
-		print("\n")
-		print(holiday['name'])
-		print(holiday['description'])
+		response += "\n"
+		response += holiday['name'] + "\n"
+		response += holiday['description']+ "\n"
 
-input()
+server = smtplib.SMTP("smtp.gmail.com", 587)
+server.starttls()
+server.login(SENDER, PASSWORD)
+server.sendmail(SENDER, RECEIVER, response)
