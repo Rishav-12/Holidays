@@ -3,6 +3,26 @@ This script uses the https://calendarific.com/ api
 '''
 import requests
 from datetime import date
+import smtplib
+from email.message import EmailMessage
+
+def email_alert(sender, password, subject, body, receiver):
+	msg = EmailMessage()
+	msg.set_content(body)
+	msg['subject'] = subject
+	msg['to'] = receiver
+	msg['from'] = sender
+
+	server = smtplib.SMTP("smtp.gmail.com", 587)
+	server.starttls()
+	server.login(sender, password)
+	server.send_message(msg)
+
+	server.quit()
+
+SENDER = "" # make sure less secure app access is turned on
+RECEIVER = ""
+PASSWORD = "" # sender's gmail password
 
 with open('api_key.txt', 'r') as key: # <-- use your own api key here
 	api_key = key.read().strip()
@@ -25,19 +45,21 @@ try:
 except Exception:
 	holidays = None
 
+response = ""
+
 if holidays is None:
-	print("Could not fetch data. Terminating")
+	response += "Could not fetch data. Terminating"
 
 elif len(holidays) == 0:
-	print("No holidays today...")
+	response += "No holidays today..."
 
 else:
-	print("\nToday's holidays :")
-	print("*************************")
+	response += "\nToday's holidays :\n"
+	response += "*************************\n"
 
 	for holiday in holidays:
-		print("\n")
-		print(holiday['name'])
-		print(holiday['description'])
+		response += "\n"
+		response += holiday['name'] + "\n"
+		response += holiday['description']+ "\n"
 
-input()
+email_alert(SENDER, PASSWORD, "Holidays", response, RECEIVER)
