@@ -1,5 +1,5 @@
 # Holidays
-A fun Python script that uses an api to get you the holidays of any place you want on a given day
+Get worldwide holidays with a fun Python script
 
 ### Description
 * It uses an api call to fetch the data
