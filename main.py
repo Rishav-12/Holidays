@@ -4,6 +4,21 @@ This script uses the https://calendarific.com/ api
 import requests
 from datetime import date
 import smtplib
+from email.message import EmailMessage
+
+def email_alert(sender, password, subject, body, receiver):
+	msg = EmailMessage()
+	msg.set_content(body)
+	msg['subject'] = subject
+	msg['to'] = receiver
+	msg['from'] = sender
+
+	server = smtplib.SMTP("smtp.gmail.com", 587)
+	server.starttls()
+	server.login(sender, password)
+	server.send_message(msg)
+
+	server.quit()
 
 SENDER = "" # make sure less secure app access is turned on
 RECEIVER = ""
@@ -47,7 +62,4 @@ else:
 		response += holiday['name'] + "\n"
 		response += holiday['description']+ "\n"
 
-server = smtplib.SMTP("smtp.gmail.com", 587)
-server.starttls()
-server.login(SENDER, PASSWORD)
-server.sendmail(SENDER, RECEIVER, response)
+email_alert(SENDER, PASSWORD, "Holidays", response, RECEIVER)
